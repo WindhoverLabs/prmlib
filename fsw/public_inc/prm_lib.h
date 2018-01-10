@@ -92,7 +92,7 @@ typedef struct
 *************************************************************************/
 
 /************************************************************************/
-/** \brief Initialize the Protobuf Library (PRMLIB)
+/** \brief Initialize the Parameter Library (PRMLIB)
 **
 **  \par Description
 **       Protobuf Library initialization routine. This function performs all
@@ -109,6 +109,141 @@ typedef struct
 **
 *************************************************************************/
 int32 PRMLIB_LibInit(void);
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+void PRMLIB_AddParam(PRMLIB_ParamData_t param);
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+boolean PRMLIB_ParamsEqual(PRMLIB_ParamData_t param1, PRMLIB_ParamData_t param2);
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data);
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data);
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data);
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+void PRMLIB_UpdateParamCount();
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+uint16 PRMLIB_GetParamCount();
+
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+PRMLIB_ParamTblData_t* PRMLIB_GetParamTable();
 
 /************************/
 /*  End of File Comment */
