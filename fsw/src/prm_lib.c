@@ -130,6 +130,43 @@ void PRMLIB_AddParam(PRMLIB_ParamData_t param)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
+/* Get Parameter Value			                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
+{
+	uint16 idx = 0;
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table to find parameter */
+	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	{
+		/* Only check enabled parameters */
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (PRMLIB_ParamsEqual(*param, PRMLIB_AppData.ParamTbl[i].param_data))
+			{
+				/* Update parameter message with current table index values */
+				param->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				param->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+				*ParamIndex = idx;
+				break;
+			}
+
+			idx++;
+		}
+	}
+
+	*ParamCount = PRMLIB_AppData.ParamCount;
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
 /* Test Parameter Equality			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -189,7 +226,9 @@ boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
 		{
 			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
+				OS_printf("param exists\n");
 				paramExists = TRUE;
+				break;
 			}
 		}
 	}
@@ -220,9 +259,11 @@ void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 		{
 			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
+				OS_printf("updating param\n");
 				/* Update parameter message with current table index values */
 				PRMLIB_AppData.ParamTbl[i].param_data.value = param_data.value;
 				PRMLIB_AppData.ParamTbl[i].param_data.type = param_data.type;
+				break;
 			}
 		}
 	}
@@ -257,6 +298,8 @@ void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 			}
 		}
 	}
+
+	PRMLIB_AppData.ParamCount--;
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
@@ -294,9 +337,32 @@ uint16 PRMLIB_GetParamCount()
 	return PRMLIB_AppData.ParamCount;
 }
 
-PRMLIB_ParamTblData_t* PRMLIB_GetParamTable()
+void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 {
-	return PRMLIB_AppData.ParamTbl;
+	uint16 idx = 0;
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table and get all params */
+	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	{
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			params[idx].value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+			strcpy(params[idx].name , PRMLIB_AppData.ParamTbl[i].param_data.name);
+			params[idx].type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+			params[idx].vehicle_id = PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id;
+			params[idx].component_id = PRMLIB_AppData.ParamTbl[i].param_data.component_id;
+
+			idx++;
+		}
+	}
+
+	*ParamCount = PRMLIB_AppData.ParamCount;
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 }
 
 
