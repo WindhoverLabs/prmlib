@@ -136,10 +136,10 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Get Parameter Value			                               */
+/* Get Parameter Data			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
+int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
 {
 	int32 Status = -1;
 	uint16 idx = 0;
@@ -180,7 +180,7 @@ int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16
 /* Get Parameter Value			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-int32 PRMLIB_GetParamValueAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex)
+int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex)
 {
 	int32 Status = -1;
 	uint16 idx = 0;
@@ -384,6 +384,21 @@ void PRMLIB_UpdateParamCount()
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Copy Parameter Data				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src)
+{
+	dest.vehicle_id = src.vehicle_id;
+	dest.component_id = src.component_id;
+	dest.type = src.type;
+	dest.value = src.value;
+	strcpy(dest.name, src.name);
 }
 
 uint16 PRMLIB_GetParamCount()

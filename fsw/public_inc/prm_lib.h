@@ -259,7 +259,7 @@ PRMLIB_ParamTblData_t* PRMLIB_GetParamTable();
 **  \endreturns
 **
 *************************************************************************/
-int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount);
+int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount);
 
 /************************************************************************/
 /** \brief
@@ -275,11 +275,12 @@ int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16
 **  \endreturns
 **
 *************************************************************************/
-int32 PRMLIB_GetParamValueAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex);
+int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex);
 
 
 void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount);
 
+void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 /************************/
 /*  End of File Comment */
 /************************/
