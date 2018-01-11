@@ -124,7 +124,7 @@ int32 PRMLIB_LibInit(void);
 **  \endreturns
 **
 *************************************************************************/
-void PRMLIB_AddParam(PRMLIB_ParamData_t param);
+int32 PRMLIB_AddParam(PRMLIB_ParamData_t param);
 
 
 /************************************************************************/
@@ -175,7 +175,7 @@ boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data);
 **  \endreturns
 **
 *************************************************************************/
-void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data);
+int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data);
 
 
 /************************************************************************/
@@ -192,7 +192,7 @@ void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data);
 **  \endreturns
 **
 *************************************************************************/
-void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data);
+int32 PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data);
 
 
 /************************************************************************/
@@ -244,6 +244,41 @@ uint16 PRMLIB_GetParamCount();
 **
 *************************************************************************/
 PRMLIB_ParamTblData_t* PRMLIB_GetParamTable();
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount);
+
+/************************************************************************/
+/** \brief
+**
+**  \par Description
+**
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \returns
+**
+**  \endreturns
+**
+*************************************************************************/
+int32 PRMLIB_GetParamValueAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex);
+
+
+void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount);
 
 /************************/
 /*  End of File Comment */

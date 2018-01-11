@@ -100,8 +100,10 @@ void PRMLIB_InitDefaultParameters(void)
 /* Add Parameter to Table			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void PRMLIB_AddParam(PRMLIB_ParamData_t param)
+int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 {
+	int32 Status = -1;
+
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
@@ -118,6 +120,8 @@ void PRMLIB_AddParam(PRMLIB_ParamData_t param)
 			PRMLIB_AppData.ParamTbl[i].param_data.type = param.type;
 			PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id = param.vehicle_id;
 			PRMLIB_AppData.ParamTbl[i].param_data.component_id = param.component_id;
+			Status = CFE_SUCCESS;
+			break;
 		}
 	}
 
@@ -126,6 +130,8 @@ void PRMLIB_AddParam(PRMLIB_ParamData_t param)
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -133,8 +139,9 @@ void PRMLIB_AddParam(PRMLIB_ParamData_t param)
 /* Get Parameter Value			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
+int32 PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
 {
+	int32 Status = -1;
 	uint16 idx = 0;
 
 	/* Lock the mutex */
@@ -152,6 +159,7 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16*
 				param->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
 				param->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 				*ParamIndex = idx;
+				Status = CFE_SUCCESS;
 				break;
 			}
 
@@ -163,6 +171,49 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16*
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get Parameter Value			                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 PRMLIB_GetParamValueAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex)
+{
+	int32 Status = -1;
+	uint16 idx = 0;
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table to find parameter */
+	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	{
+		/* Only check enabled parameters */
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (idx == ParamIndex &&
+				param->vehicle_id == PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id &&
+				param->component_id == PRMLIB_AppData.ParamTbl[i].param_data.component_id)
+			{
+				/* Update parameter message with current table index values */
+				strcpy(param->name, PRMLIB_AppData.ParamTbl[i].param_data.name);
+				param->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				param->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+				Status = CFE_SUCCESS;
+				break;
+			}
+
+			idx++;
+		}
+	}
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -212,7 +263,6 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
 {
-	int32 Status;
 	boolean paramExists = FALSE;
 
 	/* Lock the mutex */
@@ -226,7 +276,6 @@ boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
 		{
 			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
-				OS_printf("param exists\n");
 				paramExists = TRUE;
 				break;
 			}
@@ -244,9 +293,9 @@ boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
 /* Update Parameter Value			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
+int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 {
-	int32 Status;
+	int32 Status = -1;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
@@ -259,10 +308,10 @@ void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 		{
 			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
-				OS_printf("updating param\n");
 				/* Update parameter message with current table index values */
 				PRMLIB_AppData.ParamTbl[i].param_data.value = param_data.value;
 				PRMLIB_AppData.ParamTbl[i].param_data.type = param_data.type;
+				Status = CFE_SUCCESS;
 				break;
 			}
 		}
@@ -270,6 +319,8 @@ void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -277,7 +328,7 @@ void PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 /* Remove Parameter 				                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
+int32 PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 {
 	int32 Status;
 
@@ -294,7 +345,8 @@ void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 			{
 				/* Clear parameter data */
 				//PRMLIB_AppData.ParamTbl[i].param_data = {"",0};
-				PRMLIB_AppData.ParamTbl[i].enabled = 0;
+				PRMLIB_AppData.ParamTbl[i].enabled = 0; // Note: this could cause collisions
+				Status = CFE_SUCCESS;
 			}
 		}
 	}
@@ -303,6 +355,8 @@ void PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
