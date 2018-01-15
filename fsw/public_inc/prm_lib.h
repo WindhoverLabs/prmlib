@@ -282,7 +282,7 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount);
 
 void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 
-PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
+void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
 /************************/
 /*  End of File Comment */
 /************************/

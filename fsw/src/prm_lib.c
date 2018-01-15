@@ -112,6 +112,7 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 0)
 		{
+			PRMLIB_PrintParam(param);
 			/* Update parameter message with current table index values */
 			PRMLIB_AppData.ParamTbl[i].enabled = 1;
 			PRMLIB_AppData.ParamTbl[i].param_data.value = param.value;
@@ -250,7 +251,7 @@ PRMLIB_ParamsEqual_Exit_Tag:
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data)
 {
 	OS_printf("name: %s \n", param_data.name);
-	OS_printf("val: %u \n", param_data.value);
+	OS_printf("val: %f \n", param_data.value);
 	OS_printf("type: %u \n", param_data.type);
 	OS_printf("vehicle_id: %u \n", param_data.vehicle_id);
 	OS_printf("component_id: %u \n", param_data.component_id);
