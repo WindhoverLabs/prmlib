@@ -59,8 +59,6 @@ typedef struct
 	char name[PRMLIB_MSG_PARAM_NAME_LEN];
     float value;
     uint8 type;
-	uint8 vehicle_id;
-	uint8 component_id;
 } PRMLIB_ParamData_t;
 
 /** \brief Definition for a single config table entry */

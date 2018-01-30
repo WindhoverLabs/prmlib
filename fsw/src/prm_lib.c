@@ -79,11 +79,11 @@ PRMLIB_LibInit_Exit_Tag:
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_InitDefaultParameters(void)
 {
-	PRMLIB_ParamTblData_t e1 = {1, {"TEST_PARAM", 1.0, 9, 1, 1}};
-	PRMLIB_ParamTblData_t e2 = {1, {"TEST_PARAM2", 2.0, 9, 1, 1}};
-
-	PRMLIB_AppData.ParamTbl[0] = e1;
-	PRMLIB_AppData.ParamTbl[1] = e2;
+//	PRMLIB_ParamTblData_t e1 = {1, {"TEST_PARAM", 1.0, 9, 1, 1}};
+//	PRMLIB_ParamTblData_t e2 = {1, {"TEST_PARAM2", 2.0, 9, 1, 1}};
+//
+//	PRMLIB_AppData.ParamTbl[0] = e1;
+//	PRMLIB_AppData.ParamTbl[1] = e2;
 
 	PRMLIB_UpdateParamCount();
 //	PRMLIB_AppData.ParamTbl[3] = {1, {"TEST_PARAM4", 4.0, 9, 1, 1}};
@@ -119,8 +119,6 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 			memcpy(PRMLIB_AppData.ParamTbl[i].param_data.name, param.name,
 					sizeof(param.name)); //need to clear string?
 			PRMLIB_AppData.ParamTbl[i].param_data.type = param.type;
-			PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id = param.vehicle_id;
-			PRMLIB_AppData.ParamTbl[i].param_data.component_id = param.component_id;
 			Status = CFE_SUCCESS;
 			break;
 		}
@@ -140,7 +138,7 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 /* Get Parameter Data			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16* ParamCount)
+int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* InOutParam, uint16* ParamIndex, uint16* ParamCount)
 {
 	int32 Status = -1;
 	uint16 idx = 0;
@@ -154,11 +152,11 @@ int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16*
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			if (PRMLIB_ParamsEqual(*param, PRMLIB_AppData.ParamTbl[i].param_data))
+			if (PRMLIB_ParamsEqual(*InOutParam, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
 				/* Update parameter message with current table index values */
-				param->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
-				param->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+				InOutParam->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				InOutParam->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 				*ParamIndex = idx;
 				Status = CFE_SUCCESS;
 				break;
@@ -181,7 +179,7 @@ int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* param, uint16* ParamIndex, uint16*
 /* Get Parameter Value			                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex)
+int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* InOutParam, uint16 ParamIndex)
 {
 	int32 Status = -1;
 	uint16 idx = 0;
@@ -195,14 +193,12 @@ int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* param, uint16 ParamIndex)
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			if (idx == ParamIndex &&
-				param->vehicle_id == PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id &&
-				param->component_id == PRMLIB_AppData.ParamTbl[i].param_data.component_id)
+			if (idx == ParamIndex)
 			{
 				/* Update parameter message with current table index values */
-				strcpy(param->name, PRMLIB_AppData.ParamTbl[i].param_data.name);
-				param->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
-				param->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+				strcpy(InOutParam->name, PRMLIB_AppData.ParamTbl[i].param_data.name);
+				InOutParam->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				InOutParam->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 				Status = CFE_SUCCESS;
 				break;
 			}
@@ -226,18 +222,6 @@ boolean PRMLIB_ParamsEqual(PRMLIB_ParamData_t param1, PRMLIB_ParamData_t param2)
 {
 	boolean equal = TRUE;
 
-	if (param1.vehicle_id != param2.vehicle_id)
-	{
-		equal = FALSE;
-		goto PRMLIB_ParamsEqual_Exit_Tag;
-	}
-
-	if (param1.component_id != param2.component_id)
-	{
-		equal = FALSE;
-		goto PRMLIB_ParamsEqual_Exit_Tag;
-	}
-
 	if (strcmp(param1.name, param2.name) != 0)
 	{
 		equal = FALSE;
@@ -253,8 +237,6 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data)
 	OS_printf("name: %s \n", param_data.name);
 	OS_printf("val: %f \n", param_data.value);
 	OS_printf("type: %u \n", param_data.type);
-	OS_printf("vehicle_id: %u \n", param_data.vehicle_id);
-	OS_printf("component_id: %u \n", param_data.component_id);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -395,8 +377,6 @@ void PRMLIB_UpdateParamCount()
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src)
 {
-	dest.vehicle_id = src.vehicle_id;
-	dest.component_id = src.component_id;
 	dest.type = src.type;
 	dest.value = src.value;
 	strcpy(dest.name, src.name);
@@ -422,9 +402,6 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 			params[idx].value = PRMLIB_AppData.ParamTbl[i].param_data.value;
 			strcpy(params[idx].name , PRMLIB_AppData.ParamTbl[i].param_data.name);
 			params[idx].type = PRMLIB_AppData.ParamTbl[i].param_data.type;
-			params[idx].vehicle_id = PRMLIB_AppData.ParamTbl[i].param_data.vehicle_id;
-			params[idx].component_id = PRMLIB_AppData.ParamTbl[i].param_data.component_id;
-
 			idx++;
 		}
 	}
@@ -434,6 +411,57 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 }
+
+uint32 GetParamValueById_uint32(char* name)
+{
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table and get all params */
+	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	{
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
+			{
+			}
+		}
+	}
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+}
+
+int32 GetParamValueById(char* name, uint32 *inOutValue)
+{
+	int32 Status = -1;
+	uint32 ReturnValue = 0;
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table and get all params */
+	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	{
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
+			{
+				ReturnValue = (uint32) PRMLIB_AppData.ParamTbl[i].param_data.value;
+				*inOutValue = &ReturnValue;
+				Status = CFE_SUCCESS;
+				break;
+			}
+		}
+	}
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
+}
+
+
 
 
 /************************/
