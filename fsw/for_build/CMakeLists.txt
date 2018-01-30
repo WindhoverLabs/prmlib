@@ -38,6 +38,7 @@ add_airliner_app_def(prmlib
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_lib.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_version.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/prm_lib.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/prm_ids.h
 
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
