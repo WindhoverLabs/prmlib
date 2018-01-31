@@ -79,11 +79,13 @@ PRMLIB_LibInit_Exit_Tag:
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_InitDefaultParameters(void)
 {
-//	PRMLIB_ParamTblData_t e1 = {1, {"TEST_PARAM", 1.0, 9, 1, 1}};
-//	PRMLIB_ParamTblData_t e2 = {1, {"TEST_PARAM2", 2.0, 9, 1, 1}};
-//
-//	PRMLIB_AppData.ParamTbl[0] = e1;
-//	PRMLIB_AppData.ParamTbl[1] = e2;
+	PRMLIB_ParamTblData_t e1 = {1, {"PWN_DISARMED", 900.0, 6}};
+	PRMLIB_ParamTblData_t e2 = {1, {"PWN_MIN", 1000.0, 6}};
+	PRMLIB_ParamTblData_t e3 = {1, {"PWN_MAX", 2000.0, 6}};
+
+	PRMLIB_AppData.ParamTbl[0] = e1;
+	PRMLIB_AppData.ParamTbl[1] = e2;
+	PRMLIB_AppData.ParamTbl[2] = e3;
 
 	PRMLIB_UpdateParamCount();
 //	PRMLIB_AppData.ParamTbl[3] = {1, {"TEST_PARAM4", 4.0, 9, 1, 1}};
@@ -244,7 +246,7 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data)
 /* Check if Parameter Exists		                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
+boolean PRMLIB_ParamExists(char param_name[])
 {
 	boolean paramExists = FALSE;
 
@@ -257,7 +259,7 @@ boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data)
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
+			if (strcmp(param_name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
 				paramExists = TRUE;
 				break;
@@ -412,29 +414,9 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 }
 
-uint32 GetParamValueById_uint32(char* name)
+// TODO: Should this have error checking?
+uint32 PRMLIB_GetParamValueById_uint32(char name[])
 {
-	/* Lock the mutex */
-	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
-
-	/* Iterate over table and get all params */
-	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
-	{
-		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
-		{
-			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
-			{
-			}
-		}
-	}
-
-	/* Unlock the mutex */
-	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
-}
-
-int32 GetParamValueById(char* name, uint32 *inOutValue)
-{
-	int32 Status = -1;
 	uint32 ReturnValue = 0;
 
 	/* Lock the mutex */
@@ -448,9 +430,6 @@ int32 GetParamValueById(char* name, uint32 *inOutValue)
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
 				ReturnValue = (uint32) PRMLIB_AppData.ParamTbl[i].param_data.value;
-				*inOutValue = &ReturnValue;
-				Status = CFE_SUCCESS;
-				break;
 			}
 		}
 	}
@@ -458,9 +437,44 @@ int32 GetParamValueById(char* name, uint32 *inOutValue)
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 
-	return Status;
+	return ReturnValue;
 }
 
+uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_ParamType_t type)
+{
+	uint32 ReturnValue = 0;
+	boolean ParamExists = FALSE;
+	PRMLIB_ParamData_t param = {0};
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table and get all params */
+	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	{
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
+			{
+				ReturnValue = (uint32) PRMLIB_AppData.ParamTbl[i].param_data.value;
+				ParamExists = TRUE;
+			}
+		}
+	}
+
+	if(ParamExists == FALSE)
+	{
+		strcpy(param.name, name);
+		param.value = default_value;
+		param.type = type;
+		PRMLIB_AddParam(param);
+	}
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return ReturnValue;
+}
 
 
 

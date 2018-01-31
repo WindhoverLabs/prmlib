@@ -53,6 +53,19 @@
 /************************************************************************
 ** Local Structure Definitions
 *************************************************************************/
+typedef enum
+{
+   TYPE_UINT8=1,
+   TYPE_INT8=2,
+   TYPE_UINT16=3,
+   TYPE_INT16=4,
+   TYPE_UINT32=5,
+   TYPE_INT32=6,
+   TYPE_UINT64=7,
+   TYPE_INT64=8,
+   TYPE_REAL32=9,
+   TYPE_REAL64=10
+} PRMLIB_ParamType_t;
 
 typedef struct
 {
@@ -156,7 +169,7 @@ boolean PRMLIB_ParamsEqual(PRMLIB_ParamData_t param1, PRMLIB_ParamData_t param2)
 **  \endreturns
 **
 *************************************************************************/
-boolean PRMLIB_ParamExists(PRMLIB_ParamData_t param_data);
+boolean PRMLIB_ParamExists(char param_name[]);
 
 
 /************************************************************************/
@@ -281,6 +294,11 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount);
 void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
+
+uint32 PRMLIB_GetParamValueById_uint32(char name[]);
+uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_ParamType_t type);
+
+
 /************************/
 /*  End of File Comment */
 /************************/
