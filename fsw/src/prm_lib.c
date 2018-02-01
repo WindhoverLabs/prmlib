@@ -529,19 +529,19 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 	switch(param.type)
 	{
 		case TYPE_UINT8:
-			memcpy(val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			OS_printf("value: %u \n", val_uint8);
 			break;
 		case TYPE_INT8:
-			memcpy(val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			OS_printf("value: %i \n", val_int8);
 			break;
 		case TYPE_UINT16:
-			memcpy(val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			OS_printf("value: %u \n", val_uint16);
 			break;
 		case TYPE_INT16:
-			memcpy(val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			OS_printf("value: %i \n", val_int16);
 			break;
 		case TYPE_UINT32:
@@ -549,7 +549,7 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 			OS_printf("value: %u \n", val_uint32);
 			break;
 		case TYPE_INT32:
-			memcpy(val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			OS_printf("value: %i \n", val_int32);
 			break;
 		case TYPE_REAL32:
@@ -563,38 +563,38 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 {
-	uint8* val_uint8 	= 0;
-	int8* val_int8		= 0;
-	uint16* val_uint16	= 0;
-	int16* val_int16	= 0;
+	uint8 val_uint8 	= 0;
+	int8 val_int8		= 0;
+	uint16 val_uint16	= 0;
+	int16 val_int16	= 0;
 	uint32 val_uint32	= 0;
-	int32* val_int32 	= 0;
+	int32 val_int32 	= 0;
 
 	switch(param.type)
 	{
 		case TYPE_UINT8:
-			memcpy(val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_uint8, sizeof(param.value));
+			memcpy(&val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_uint8, sizeof(param.value));
 			break;
 		case TYPE_INT8:
-			memcpy(val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_int8, sizeof(param.value));
+			memcpy(&val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_int8, sizeof(param.value));
 			break;
 		case TYPE_UINT16:
-			memcpy(val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_uint16, sizeof(param.value));
+			memcpy(&val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_uint16, sizeof(param.value));
 			break;
 		case TYPE_INT16:
-			memcpy(val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_int16, sizeof(param.value));
+			memcpy(&val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_int16, sizeof(param.value));
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			memcpy(val, &val_uint32, sizeof(param.value));
 			break;
 		case TYPE_INT32:
-			memcpy(val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_int32, sizeof(param.value));
+			memcpy(&val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_int32, sizeof(param.value));
 			break;
 		case TYPE_REAL32:
 			memcpy(val, param.value, sizeof(param.value));
@@ -607,32 +607,32 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 {
-	uint8* val_uint8 	= 0;
-	int8* val_int8 		= 0;
-	uint16* val_uint16 	= 0;
-	int16* val_int16	= 0;
+	uint8 val_uint8 	= 0;
+	int8 val_int8 		= 0;
+	uint16 val_uint16 	= 0;
+	int16 val_int16	= 0;
 	uint32 val_uint32	= 0;
-	int32* val_int32 	= 0;
+	int32 val_int32 	= 0;
 
 	uint32 test	= 0;
 	OS_printf("In set param\n");
 	switch(param->type)
 	{
 		case TYPE_UINT8:
-			memcpy(val_uint8, val, sizeof(param->value));
-			memcpy(param->value, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint8, val, sizeof(param->value));
+			memcpy(param->value, &val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT8:
-			memcpy(val_int8, val, sizeof(param->value));
-			memcpy(param->value, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int8, val, sizeof(param->value));
+			memcpy(param->value, &val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT16:
-			memcpy(val_uint16, val, sizeof(param->value));
-			memcpy(param->value, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint16, val, sizeof(param->value));
+			memcpy(param->value, &val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT16:
-			memcpy(val_int16, val, sizeof(param->value));
-			memcpy(param->value, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int16, val, sizeof(param->value));
+			memcpy(param->value, &val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, val, sizeof(uint32));
@@ -642,8 +642,8 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 			OS_printf("actual: %u \n", test);
 			break;
 		case TYPE_INT32:
-			memcpy(val_int32, val, sizeof(param->value));
-			memcpy(param->value, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int32, val, sizeof(param->value));
+			memcpy(param->value, &val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_REAL32:
 			memcpy(param->value, val, sizeof(param->value));
@@ -657,32 +657,32 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 
 void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 {
-	uint8* val_uint8 	= 0;
-	int8* val_int8 		= 0;
-	uint16* val_uint16 	= 0;
-	int16* val_int16	= 0;
+	uint8 val_uint8 	= 0;
+	int8 val_int8 		= 0;
+	uint16 val_uint16 	= 0;
+	int16 val_int16	= 0;
 	uint32 val_uint32	= 0;
-	int32* val_int32 	= 0;
+	int32 val_int32 	= 0;
 
 	uint32 test	= 0;
 	OS_printf("In set value\n");
 	switch(type)
 	{
 		case TYPE_UINT8:
-			memcpy(val_uint8, srcVal, sizeof(uint8));
-			memcpy(destVal, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint8, srcVal, sizeof(uint8));
+			memcpy(destVal, &val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT8:
-			memcpy(val_int8, srcVal, sizeof(int8));
-			memcpy(destVal, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int8, srcVal, sizeof(int8));
+			memcpy(destVal, &val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT16:
-			memcpy(val_uint16, srcVal, sizeof(uint16));
-			memcpy(destVal, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint16, srcVal, sizeof(uint16));
+			memcpy(destVal, &val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT16:
-			memcpy(val_int16, srcVal, sizeof(int16));
-			memcpy(destVal, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int16, srcVal, sizeof(int16));
+			memcpy(destVal, &val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, srcVal, sizeof(uint32));
@@ -692,8 +692,8 @@ void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 			OS_printf("actual: %u \n", test);
 			break;
 		case TYPE_INT32:
-			memcpy(val_int32, srcVal, sizeof(int32));
-			memcpy(destVal, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_int32, srcVal, sizeof(int32));
+			memcpy(destVal, &val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_REAL32:
 			memcpy(destVal, srcVal, sizeof(float));

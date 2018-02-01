@@ -34,5 +34,14 @@
 #define PARAM_ID_PWM_DISARMED       ("PWN_DISARMED")
 #define PARAM_ID_PWM_MIN            ("PWN_MIN")
 #define PARAM_ID_PWM_MAX            ("PWN_MAX")
+#define PARAM_ID_TEST_UINT8            ("TEST_UINT8")
+#define PARAM_ID_TEST_INT8            ("TEST_INT8")
+#define PARAM_ID_TEST_UINT16            ("TEST_UINT16")
+#define PARAM_ID_TEST_INT16            ("TEST_INT16")
+#define PARAM_ID_TEST_UINT32            ("TEST_UINT32")
+#define PARAM_ID_TEST_INT32            ("TEST_INT32")
+#define PARAM_ID_TEST_FLOAT            ("TEST_FLOAT")
+
+
 
 
