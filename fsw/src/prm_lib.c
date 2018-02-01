@@ -641,10 +641,7 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, val, sizeof(uint32));
-			OS_printf("set val: %u \n", val_uint32);
-			memcpy(&param->value, &val_uint32, sizeof(val_uint32));
-			memcpy(&test, &param->value, sizeof(uint32));
-			OS_printf("actual: %u \n", test);
+			memcpy(param->value, &val_uint32, sizeof(val_uint32));
 			break;
 		case TYPE_INT32:
 			memcpy(&val_int32, val, sizeof(int32));
@@ -693,10 +690,7 @@ void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, srcVal, sizeof(uint32));
-			OS_printf("set val: %u \n", val_uint32);
-			memcpy(&destVal, &val_uint32, sizeof(val_uint32));
-			memcpy(&test, &destVal, sizeof(uint32));
-			OS_printf("actual: %u \n", test);
+			memcpy(destVal, &val_uint32, sizeof(val_uint32));
 			break;
 		case TYPE_INT32:
 			memcpy(&val_int32, srcVal, sizeof(int32));
