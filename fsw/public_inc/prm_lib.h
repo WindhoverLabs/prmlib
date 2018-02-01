@@ -49,10 +49,15 @@
 #define PRMLIB_PARAM_TBL_MAX_ENTRY  (1000)
 #define PRMLIB_PARAM_TBL_MUTEX_NAME ("PRMLIB_PARAM_TBL_MUTEX")
 #define PRMLIB_MSG_PARAM_NAME_LEN  (64)
+#define PRMLIB_PARAM_VALUE_MAX_LEN (64)
 
 /************************************************************************
 ** Local Structure Definitions
 *************************************************************************/
+
+/**
+**  \brief
+*/
 typedef enum
 {
    TYPE_UINT8=1,
@@ -67,10 +72,22 @@ typedef enum
    TYPE_REAL64=10
 } PRMLIB_ParamType_t;
 
+/**
+**  \brief
+*/
+typedef struct
+{
+    uint8  TlmHeader[CFE_SB_TLM_HDR_SIZE];
+    char   name[PRMLIB_MSG_PARAM_NAME_LEN];
+} PRMLIB_UpdatedParamMsg_t;
+
+/**
+**  \brief
+*/
 typedef struct
 {
 	char name[PRMLIB_MSG_PARAM_NAME_LEN];
-    float value;
+    uint8 value[8];
     uint8 type;
 } PRMLIB_ParamData_t;
 
@@ -296,7 +313,8 @@ void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
 
 uint32 PRMLIB_GetParamValueById_uint32(char name[]);
-uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_ParamType_t type);
+uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value);
+int32 PRMLIB_ParamRegister(char name[], uint8* value, uint8* default_value, PRMLIB_ParamType_t type)
 
 
 /************************/

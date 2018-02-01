@@ -82,10 +82,25 @@ void PRMLIB_InitDefaultParameters(void)
 	PRMLIB_ParamTblData_t e1 = {1, {"PWN_DISARMED", 900.0, 6}};
 	PRMLIB_ParamTblData_t e2 = {1, {"PWN_MIN", 1000.0, 6}};
 	PRMLIB_ParamTblData_t e3 = {1, {"PWN_MAX", 2000.0, 6}};
+	PRMLIB_ParamTblData_t e4 = {1, {"test_uint8", 1, 1}};
+	PRMLIB_ParamTblData_t e5 = {1, {"test_int8", 1, 2}};
+	PRMLIB_ParamTblData_t e6 = {1, {"test_uint16", 1, 3}};
+	PRMLIB_ParamTblData_t e7 = {1, {"test_int16", 1, 4}};
+	PRMLIB_ParamTblData_t e8 = {1, {"test_uint32", 1, 5}};
+	PRMLIB_ParamTblData_t e9 = {1, {"test_int32", 1, 6}};
+	PRMLIB_ParamTblData_t e12 = {1, {"test_float32", 1.0, 9}};
 
 	PRMLIB_AppData.ParamTbl[0] = e1;
 	PRMLIB_AppData.ParamTbl[1] = e2;
 	PRMLIB_AppData.ParamTbl[2] = e3;
+	PRMLIB_AppData.ParamTbl[3] = e4;
+	PRMLIB_AppData.ParamTbl[4] = e5;
+	PRMLIB_AppData.ParamTbl[5] = e6;
+	PRMLIB_AppData.ParamTbl[6] = e7;
+	PRMLIB_AppData.ParamTbl[7] = e8;
+	PRMLIB_AppData.ParamTbl[8] = e9;
+	PRMLIB_AppData.ParamTbl[9] = e12;
+
 
 	PRMLIB_UpdateParamCount();
 //	PRMLIB_AppData.ParamTbl[3] = {1, {"TEST_PARAM4", 4.0, 9, 1, 1}};
@@ -117,7 +132,7 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 			PRMLIB_PrintParam(param);
 			/* Update parameter message with current table index values */
 			PRMLIB_AppData.ParamTbl[i].enabled = 1;
-			PRMLIB_AppData.ParamTbl[i].param_data.value = param.value;
+			memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			memcpy(PRMLIB_AppData.ParamTbl[i].param_data.name, param.name,
 					sizeof(param.name)); //need to clear string?
 			PRMLIB_AppData.ParamTbl[i].param_data.type = param.type;
@@ -157,7 +172,7 @@ int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* InOutParam, uint16* ParamIndex, ui
 			if (PRMLIB_ParamsEqual(*InOutParam, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
 				/* Update parameter message with current table index values */
-				InOutParam->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				memcpy(&InOutParam->value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				InOutParam->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 				*ParamIndex = idx;
 				Status = CFE_SUCCESS;
@@ -199,7 +214,7 @@ int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* InOutParam, uint16 ParamInd
 			{
 				/* Update parameter message with current table index values */
 				strcpy(InOutParam->name, PRMLIB_AppData.ParamTbl[i].param_data.name);
-				InOutParam->value = PRMLIB_AppData.ParamTbl[i].param_data.value;
+				memcpy(&InOutParam->value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				InOutParam->type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 				Status = CFE_SUCCESS;
 				break;
@@ -294,8 +309,9 @@ int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 			if (PRMLIB_ParamsEqual(param_data, PRMLIB_AppData.ParamTbl[i].param_data))
 			{
 				/* Update parameter message with current table index values */
-				PRMLIB_AppData.ParamTbl[i].param_data.value = param_data.value;
+				memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				PRMLIB_AppData.ParamTbl[i].param_data.type = param_data.type;
+				OS_printf("new tbl value: %f\n",PRMLIB_AppData.ParamTbl[i].param_data.value);
 				Status = CFE_SUCCESS;
 				break;
 			}
@@ -380,7 +396,7 @@ void PRMLIB_UpdateParamCount()
 void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src)
 {
 	dest.type = src.type;
-	dest.value = src.value;
+	memcpy(&dest.value, src.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 	strcpy(dest.name, src.name);
 }
 
@@ -401,8 +417,8 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			params[idx].value = PRMLIB_AppData.ParamTbl[i].param_data.value;
-			strcpy(params[idx].name , PRMLIB_AppData.ParamTbl[i].param_data.name);
+			memcpy(&params[idx].value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			strcpy(params[idx].name, PRMLIB_AppData.ParamTbl[i].param_data.name);
 			params[idx].type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 			idx++;
 		}
@@ -429,7 +445,7 @@ uint32 PRMLIB_GetParamValueById_uint32(char name[])
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				ReturnValue = (uint32) PRMLIB_AppData.ParamTbl[i].param_data.value;
+				memcpy(&ReturnValue, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			}
 		}
 	}
@@ -440,9 +456,10 @@ uint32 PRMLIB_GetParamValueById_uint32(char name[])
 	return ReturnValue;
 }
 
-uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_ParamType_t type)
+
+int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB_ParamType_t type)
 {
-	uint32 ReturnValue = 0;
+	int32 Status = 0;
 	boolean ParamExists = FALSE;
 	PRMLIB_ParamData_t param = {0};
 
@@ -456,7 +473,7 @@ uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_Par
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				ReturnValue = (uint32) PRMLIB_AppData.ParamTbl[i].param_data.value;
+				memcpy(&value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				ParamExists = TRUE;
 			}
 		}
@@ -465,15 +482,103 @@ uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value, PRMLIB_Par
 	if(ParamExists == FALSE)
 	{
 		strcpy(param.name, name);
-		param.value = default_value;
-		param.type = type;
+		memcpy(param.value, &default_value, PRMLIB_PARAM_VALUE_MAX_LEN);
+		param.type = TYPE_UINT32;
 		PRMLIB_AddParam(param);
 	}
 
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 
-	return ReturnValue;
+	return Status;
+}
+
+void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
+{
+	uint8* val_uint8 	= 0;
+	int8* val_int8		= 0;
+	uint16* val_uint16	= 0;
+	int16* val_int16	= 0;
+	uint32* val_uint32	= 0;
+	int32* val_int32 	= 0;
+
+	switch(param.type)
+	{
+		case TYPE_UINT8:
+			memcpy(val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_uint8, sizeof(param.value));
+			break;
+		case TYPE_INT8:
+			memcpy(val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_int8, sizeof(param.value));
+			break;
+		case TYPE_UINT16:
+			memcpy(val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_uint16, sizeof(param.value));
+			break;
+		case TYPE_INT16:
+			memcpy(val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_int16, sizeof(param.value));
+			break;
+		case TYPE_UINT32:
+			memcpy(val_uint32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_uint32, sizeof(param.value));
+			break;
+		case TYPE_INT32:
+			memcpy(val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, val_int32, sizeof(param.value));
+			break;
+		case TYPE_REAL32:
+			memcpy(val, param.value, sizeof(param.value));
+			break;
+		default:
+			//unsupported type
+			break;
+	}
+}
+
+void PRMLIB_SetParamValue(PRMLIB_ParamData_t param, void* val)
+{
+	uint8* val_uint8 	= 0;
+	int8* val_int8 		= 0;
+	uint16* val_uint16 	= 0;
+	int16* val_int16		= 0;
+	uint32* val_uint32	= 0;
+	int32* val_int32 	= 0;
+
+	switch(param.type)
+	{
+		case TYPE_UINT8:
+			memcpy(val_uint8, val, sizeof(param.value));
+			memcpy(param.value, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_INT8:
+			memcpy(val_int8, val, sizeof(param.value));
+			memcpy(param.value, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_UINT16:
+			memcpy(val_uint16, val, sizeof(param.value));
+			memcpy(param.value, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_INT16:
+			memcpy(val_int16, val, sizeof(param.value));
+			memcpy(param.value, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_UINT32:
+			memcpy(val_uint32, val, sizeof(param.value));
+			memcpy(param.value, val_uint32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_INT32:
+			memcpy(val_int32, val, sizeof(param.value));
+			memcpy(param.value, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_REAL32:
+			memcpy(param.value, val, sizeof(param.value));
+			break;
+		default:
+			//unsupported type
+			break;
+	}
 }
 
 
