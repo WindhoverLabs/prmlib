@@ -129,7 +129,7 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 0)
 		{
-			PRMLIB_PrintParam(param);
+			//PRMLIB_PrintParam(param);
 			/* Update parameter message with current table index values */
 			PRMLIB_AppData.ParamTbl[i].enabled = 1;
 			memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
@@ -247,13 +247,6 @@ boolean PRMLIB_ParamsEqual(PRMLIB_ParamData_t param1, PRMLIB_ParamData_t param2)
 
 PRMLIB_ParamsEqual_Exit_Tag:
 	return equal;
-}
-
-void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data)
-{
-	OS_printf("name: %s \n", param_data.name);
-	OS_printf("val: %f \n", param_data.value);
-	OS_printf("type: %u \n", param_data.type);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -412,14 +405,16 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
+	OS_printf("count: %u\n", PRMLIB_AppData.ParamCount);
 	/* Iterate over table and get all params */
 	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			memcpy(&params[idx].value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("found enabled\n");
 			strcpy(params[idx].name, PRMLIB_AppData.ParamTbl[i].param_data.name);
 			params[idx].type = PRMLIB_AppData.ParamTbl[i].param_data.type;
+			PRMLIB_SetParamValue(&params[idx], &PRMLIB_AppData.ParamTbl[i].param_data.value);
 			idx++;
 		}
 	}
@@ -430,10 +425,9 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 }
 
-// TODO: Should this have error checking?
-uint32 PRMLIB_GetParamValueById_uint32(char name[])
+int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam)
 {
-	uint32 ReturnValue = 0;
+	int32 Status = -1;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
@@ -445,7 +439,8 @@ uint32 PRMLIB_GetParamValueById_uint32(char name[])
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				memcpy(&ReturnValue, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+				//memcpy(InOutParam, &PRMLIB_AppData.ParamTbl[i].param_data, sizeof(PRMLIB_ParamData_t));
+				Status = CFE_SUCCESS;
 			}
 		}
 	}
@@ -453,13 +448,38 @@ uint32 PRMLIB_GetParamValueById_uint32(char name[])
 	/* Unlock the mutex */
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 
-	return ReturnValue;
+	return Status;
 }
 
-
-int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB_ParamType_t type)
+int32 PRMLIB_GetParamValueById(char name[], void* InOutValue)
 {
-	int32 Status = 0;
+	int32 Status = -1;
+
+	/* Lock the mutex */
+	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
+
+	/* Iterate over table and get all params */
+	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	{
+		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
+		{
+			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
+			{
+				memcpy(InOutValue, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+				Status = CFE_SUCCESS;
+			}
+		}
+	}
+
+	/* Unlock the mutex */
+	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
+
+	return Status;
+}
+
+int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t type)
+{
+	int32 Status = -1;
 	boolean ParamExists = FALSE;
 	PRMLIB_ParamData_t param = {0};
 
@@ -473,8 +493,9 @@ int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				memcpy(&value, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+				PRMLIB_GetParamValue(PRMLIB_AppData.ParamTbl[i].param_data, inOutValue);
 				ParamExists = TRUE;
+				Status = CFE_SUCCESS;
 			}
 		}
 	}
@@ -482,9 +503,9 @@ int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB
 	if(ParamExists == FALSE)
 	{
 		strcpy(param.name, name);
-		memcpy(param.value, &default_value, PRMLIB_PARAM_VALUE_MAX_LEN);
-		param.type = TYPE_UINT32;
-		PRMLIB_AddParam(param);
+		param.type = type;
+		PRMLIB_SetParamValue(&param, inOutValue);
+		Status = PRMLIB_AddParam(param);
 	}
 
 	/* Unlock the mutex */
@@ -493,13 +514,59 @@ int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB
 	return Status;
 }
 
+void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
+{
+	uint8 val_uint8 	= 0;
+	int8 val_int8 		= 0;
+	uint16 val_uint16 	= 0;
+	int16 val_int16		= 0;
+	uint32 val_uint32	= 0;
+	int32 val_int32 	= 0;
+
+	OS_printf("name: %s \n", param.name);
+	OS_printf("type: %u \n", param.type);
+	switch(param.type)
+	{
+		case TYPE_UINT8:
+			memcpy(val_uint8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("value: %u \n", val_uint8);
+			break;
+		case TYPE_INT8:
+			memcpy(val_int8, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("value: %i \n", val_int8);
+			break;
+		case TYPE_UINT16:
+			memcpy(val_uint16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("value: %u \n", val_uint16);
+			break;
+		case TYPE_INT16:
+			memcpy(val_int16, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("value: %i \n", val_int16);
+			break;
+		case TYPE_UINT32:
+			memcpy(&val_uint32, &param.value, sizeof(uint32));
+			OS_printf("value: %u \n", val_uint32);
+			break;
+		case TYPE_INT32:
+			memcpy(val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			OS_printf("value: %i \n", val_int32);
+			break;
+		case TYPE_REAL32:
+			OS_printf("value: %f \n", param.value);
+			break;
+		default:
+			//unsupported type
+			break;
+	}
+}
+
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 {
 	uint8* val_uint8 	= 0;
 	int8* val_int8		= 0;
 	uint16* val_uint16	= 0;
 	int16* val_int16	= 0;
-	uint32* val_uint32	= 0;
+	uint32 val_uint32	= 0;
 	int32* val_int32 	= 0;
 
 	switch(param.type)
@@ -521,8 +588,8 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 			memcpy(val, val_int16, sizeof(param.value));
 			break;
 		case TYPE_UINT32:
-			memcpy(val_uint32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-			memcpy(val, val_uint32, sizeof(param.value));
+			memcpy(&val_uint32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val, &val_uint32, sizeof(param.value));
 			break;
 		case TYPE_INT32:
 			memcpy(val_int32, param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
@@ -537,43 +604,48 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 	}
 }
 
-void PRMLIB_SetParamValue(PRMLIB_ParamData_t param, void* val)
+void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 {
 	uint8* val_uint8 	= 0;
 	int8* val_int8 		= 0;
 	uint16* val_uint16 	= 0;
-	int16* val_int16		= 0;
-	uint32* val_uint32	= 0;
+	int16* val_int16	= 0;
+	uint32 val_uint32	= 0;
 	int32* val_int32 	= 0;
 
-	switch(param.type)
+	uint32 test	= 0;
+
+	switch(param->type)
 	{
 		case TYPE_UINT8:
-			memcpy(val_uint8, val, sizeof(param.value));
-			memcpy(param.value, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val_uint8, val, sizeof(param->value));
+			memcpy(param->value, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT8:
-			memcpy(val_int8, val, sizeof(param.value));
-			memcpy(param.value, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val_int8, val, sizeof(param->value));
+			memcpy(param->value, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT16:
-			memcpy(val_uint16, val, sizeof(param.value));
-			memcpy(param.value, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val_uint16, val, sizeof(param->value));
+			memcpy(param->value, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_INT16:
-			memcpy(val_int16, val, sizeof(param.value));
-			memcpy(param.value, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val_int16, val, sizeof(param->value));
+			memcpy(param->value, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_UINT32:
-			memcpy(val_uint32, val, sizeof(param.value));
-			memcpy(param.value, val_uint32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(&val_uint32, val, sizeof(uint32));
+			OS_printf("set val: %u \n", val_uint32);
+			memcpy(&param->value, &val_uint32, sizeof(val_uint32));
+			memcpy(&test, &param->value, sizeof(uint32));
+			OS_printf("actual: %u \n", test);
 			break;
 		case TYPE_INT32:
-			memcpy(val_int32, val, sizeof(param.value));
-			memcpy(param.value, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			memcpy(val_int32, val, sizeof(param->value));
+			memcpy(param->value, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
 			break;
 		case TYPE_REAL32:
-			memcpy(param.value, val, sizeof(param.value));
+			memcpy(param->value, val, sizeof(param->value));
 			break;
 		default:
 			//unsupported type
