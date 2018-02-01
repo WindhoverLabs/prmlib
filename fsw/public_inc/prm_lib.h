@@ -313,8 +313,7 @@ void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
 
 uint32 PRMLIB_GetParamValueById_uint32(char name[]);
-uint32 PRMLIB_ParamRegister_uint32(char name[], uint32 default_value);
-int32 PRMLIB_ParamRegister(char name[], uint8* value, uint8* default_value, PRMLIB_ParamType_t type)
+int32 PRMLIB_ParamRegister(char name[], void* value, void* default_value, PRMLIB_ParamType_t type);
 
 
 /************************/

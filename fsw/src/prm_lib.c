@@ -79,27 +79,27 @@ PRMLIB_LibInit_Exit_Tag:
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_InitDefaultParameters(void)
 {
-	PRMLIB_ParamTblData_t e1 = {1, {"PWN_DISARMED", 900.0, 6}};
-	PRMLIB_ParamTblData_t e2 = {1, {"PWN_MIN", 1000.0, 6}};
-	PRMLIB_ParamTblData_t e3 = {1, {"PWN_MAX", 2000.0, 6}};
-	PRMLIB_ParamTblData_t e4 = {1, {"test_uint8", 1, 1}};
-	PRMLIB_ParamTblData_t e5 = {1, {"test_int8", 1, 2}};
-	PRMLIB_ParamTblData_t e6 = {1, {"test_uint16", 1, 3}};
-	PRMLIB_ParamTblData_t e7 = {1, {"test_int16", 1, 4}};
-	PRMLIB_ParamTblData_t e8 = {1, {"test_uint32", 1, 5}};
-	PRMLIB_ParamTblData_t e9 = {1, {"test_int32", 1, 6}};
-	PRMLIB_ParamTblData_t e12 = {1, {"test_float32", 1.0, 9}};
-
-	PRMLIB_AppData.ParamTbl[0] = e1;
-	PRMLIB_AppData.ParamTbl[1] = e2;
-	PRMLIB_AppData.ParamTbl[2] = e3;
-	PRMLIB_AppData.ParamTbl[3] = e4;
-	PRMLIB_AppData.ParamTbl[4] = e5;
-	PRMLIB_AppData.ParamTbl[5] = e6;
-	PRMLIB_AppData.ParamTbl[6] = e7;
-	PRMLIB_AppData.ParamTbl[7] = e8;
-	PRMLIB_AppData.ParamTbl[8] = e9;
-	PRMLIB_AppData.ParamTbl[9] = e12;
+//	PRMLIB_ParamTblData_t e1 = {1, {"PWN_DISARMED", 900.0, 6}};
+//	PRMLIB_ParamTblData_t e2 = {1, {"PWN_MIN", 1000.0, 6}};
+//	PRMLIB_ParamTblData_t e3 = {1, {"PWN_MAX", 2000.0, 6}};
+//	PRMLIB_ParamTblData_t e4 = {1, {"test_uint8", 1, 1}};
+//	PRMLIB_ParamTblData_t e5 = {1, {"test_int8", 1, 2}};
+//	PRMLIB_ParamTblData_t e6 = {1, {"test_uint16", 1, 3}};
+//	PRMLIB_ParamTblData_t e7 = {1, {"test_int16", 1, 4}};
+//	PRMLIB_ParamTblData_t e8 = {1, {"test_uint32", 1, 5}};
+//	PRMLIB_ParamTblData_t e9 = {1, {"test_int32", 1, 6}};
+//	PRMLIB_ParamTblData_t e12 = {1, {"test_float32", 1.0, 9}};
+//
+//	PRMLIB_AppData.ParamTbl[0] = e1;
+//	PRMLIB_AppData.ParamTbl[1] = e2;
+//	PRMLIB_AppData.ParamTbl[2] = e3;
+//	PRMLIB_AppData.ParamTbl[3] = e4;
+//	PRMLIB_AppData.ParamTbl[4] = e5;
+//	PRMLIB_AppData.ParamTbl[5] = e6;
+//	PRMLIB_AppData.ParamTbl[6] = e7;
+//	PRMLIB_AppData.ParamTbl[7] = e8;
+//	PRMLIB_AppData.ParamTbl[8] = e9;
+//	PRMLIB_AppData.ParamTbl[9] = e12;
 
 
 	PRMLIB_UpdateParamCount();
