@@ -132,10 +132,10 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 			//PRMLIB_PrintParam(param);
 			/* Update parameter message with current table index values */
 			PRMLIB_AppData.ParamTbl[i].enabled = 1;
-			memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 			memcpy(PRMLIB_AppData.ParamTbl[i].param_data.name, param.name,
 					sizeof(param.name)); //need to clear string?
 			PRMLIB_AppData.ParamTbl[i].param_data.type = param.type;
+			PRMLIB_SetParamValue(&PRMLIB_AppData.ParamTbl[i].param_data, &param.value);
 			Status = CFE_SUCCESS;
 			break;
 		}
@@ -304,7 +304,8 @@ int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 				/* Update parameter message with current table index values */
 				memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				PRMLIB_AppData.ParamTbl[i].param_data.type = param_data.type;
-				OS_printf("new tbl value: %f\n",PRMLIB_AppData.ParamTbl[i].param_data.value);
+				OS_printf("\nUpdate param:\n");
+				PRMLIB_PrintParam(PRMLIB_AppData.ParamTbl[i].param_data);
 				Status = CFE_SUCCESS;
 				break;
 			}
@@ -614,7 +615,7 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 	int32* val_int32 	= 0;
 
 	uint32 test	= 0;
-
+	OS_printf("In set param\n");
 	switch(param->type)
 	{
 		case TYPE_UINT8:
@@ -648,11 +649,61 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 			memcpy(param->value, val, sizeof(param->value));
 			break;
 		default:
+			OS_printf("Unsupported type encountered: %u\n", param->type);
 			//unsupported type
 			break;
 	}
 }
 
+void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
+{
+	uint8* val_uint8 	= 0;
+	int8* val_int8 		= 0;
+	uint16* val_uint16 	= 0;
+	int16* val_int16	= 0;
+	uint32 val_uint32	= 0;
+	int32* val_int32 	= 0;
+
+	uint32 test	= 0;
+	OS_printf("In set value\n");
+	switch(type)
+	{
+		case TYPE_UINT8:
+			memcpy(val_uint8, srcVal, sizeof(uint8));
+			memcpy(destVal, val_uint8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_INT8:
+			memcpy(val_int8, srcVal, sizeof(int8));
+			memcpy(destVal, val_int8, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_UINT16:
+			memcpy(val_uint16, srcVal, sizeof(uint16));
+			memcpy(destVal, val_uint16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_INT16:
+			memcpy(val_int16, srcVal, sizeof(int16));
+			memcpy(destVal, val_int16, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_UINT32:
+			memcpy(&val_uint32, srcVal, sizeof(uint32));
+			OS_printf("set val: %u \n", val_uint32);
+			memcpy(&destVal, &val_uint32, sizeof(val_uint32));
+			memcpy(&test, &destVal, sizeof(uint32));
+			OS_printf("actual: %u \n", test);
+			break;
+		case TYPE_INT32:
+			memcpy(val_int32, srcVal, sizeof(int32));
+			memcpy(destVal, val_int32, PRMLIB_PARAM_VALUE_MAX_LEN);
+			break;
+		case TYPE_REAL32:
+			memcpy(destVal, srcVal, sizeof(float));
+			break;
+		default:
+			OS_printf("Unsupported type encountered: %u\n", type);
+			//unsupported type
+			break;
+	}
+}
 
 
 /************************/

@@ -49,7 +49,7 @@
 #define PRMLIB_PARAM_TBL_MAX_ENTRY  (1000)
 #define PRMLIB_PARAM_TBL_MUTEX_NAME ("PRMLIB_PARAM_TBL_MUTEX")
 #define PRMLIB_MSG_PARAM_NAME_LEN  (64)
-#define PRMLIB_PARAM_VALUE_MAX_LEN (64)
+#define PRMLIB_PARAM_VALUE_MAX_LEN (8)
 
 /************************************************************************
 ** Local Structure Definitions
@@ -317,7 +317,7 @@ int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t typ
 
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val);
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val);
-
+void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type);
 
 /************************/
 /*  End of File Comment */
