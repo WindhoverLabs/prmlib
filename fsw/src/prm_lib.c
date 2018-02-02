@@ -466,7 +466,7 @@ int32 PRMLIB_GetParamValueById(char name[], void* InOutValue)
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				memcpy(InOutValue, &PRMLIB_AppData.ParamTbl[i].param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
+				PRMLIB_GetParamValue(PRMLIB_AppData.ParamTbl[i].param_data, InOutValue);
 				Status = CFE_SUCCESS;
 			}
 		}
