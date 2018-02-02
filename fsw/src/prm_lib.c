@@ -79,33 +79,33 @@ PRMLIB_LibInit_Exit_Tag:
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_InitDefaultParameters(void)
 {
-	PRMLIB_ParamData_t param;
-	PRMLIB_ParamData_t param2;
-	PRMLIB_ParamData_t param3;
-
-	uint32 val = 899;
-	uint32 val2 = 999;
-	uint32 val3 = 1999;
-
-	strcpy(param.name, "PWN_DISARMED");
-	strcpy(param2.name, "PWN_MIN");
-	strcpy(param3.name, "PWN_MAX");
-	param.type = TYPE_UINT32;
-	param2.type = TYPE_UINT32;
-	param3.type = TYPE_UINT32;
-	PRMLIB_SetParamValue(&param, &val);
-	PRMLIB_SetParamValue(&param2, &val2);
-	PRMLIB_SetParamValue(&param3, &val3);
-
-	PRMLIB_ParamTblData_t e1 = {1, param};
-	PRMLIB_ParamTblData_t e2 = {1, param2};
-	PRMLIB_ParamTblData_t e3 = {1, param3};
-
-	PRMLIB_AppData.ParamTbl[0] = e1;
-	PRMLIB_AppData.ParamTbl[1] = e2;
-	PRMLIB_AppData.ParamTbl[2] = e3;
-
-	PRMLIB_UpdateParamCount();
+//	PRMLIB_ParamData_t param;
+//	PRMLIB_ParamData_t param2;
+//	PRMLIB_ParamData_t param3;
+//
+//	uint32 val = 899;
+//	uint32 val2 = 999;
+//	uint32 val3 = 1999;
+//
+//	strcpy(param.name, "PWN_DISARMED");
+//	strcpy(param2.name, "PWN_MIN");
+//	strcpy(param3.name, "PWN_MAX");
+//	param.type = TYPE_UINT32;
+//	param2.type = TYPE_UINT32;
+//	param3.type = TYPE_UINT32;
+//	PRMLIB_SetParamValue(&param, &val);
+//	PRMLIB_SetParamValue(&param2, &val2);
+//	PRMLIB_SetParamValue(&param3, &val3);
+//
+//	PRMLIB_ParamTblData_t e1 = {1, param};
+//	PRMLIB_ParamTblData_t e2 = {1, param2};
+//	PRMLIB_ParamTblData_t e3 = {1, param3};
+//
+//	PRMLIB_AppData.ParamTbl[0] = e1;
+//	PRMLIB_AppData.ParamTbl[1] = e2;
+//	PRMLIB_AppData.ParamTbl[2] = e3;
+//
+//	PRMLIB_UpdateParamCount();
 
 }/* End PRMLIB_LibInit */
 
