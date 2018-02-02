@@ -79,37 +79,34 @@ PRMLIB_LibInit_Exit_Tag:
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_InitDefaultParameters(void)
 {
-//	PRMLIB_ParamTblData_t e1 = {1, {"PWN_DISARMED", 900.0, 6}};
-//	PRMLIB_ParamTblData_t e2 = {1, {"PWN_MIN", 1000.0, 6}};
-//	PRMLIB_ParamTblData_t e3 = {1, {"PWN_MAX", 2000.0, 6}};
-//	PRMLIB_ParamTblData_t e4 = {1, {"test_uint8", 1, 1}};
-//	PRMLIB_ParamTblData_t e5 = {1, {"test_int8", 1, 2}};
-//	PRMLIB_ParamTblData_t e6 = {1, {"test_uint16", 1, 3}};
-//	PRMLIB_ParamTblData_t e7 = {1, {"test_int16", 1, 4}};
-//	PRMLIB_ParamTblData_t e8 = {1, {"test_uint32", 1, 5}};
-//	PRMLIB_ParamTblData_t e9 = {1, {"test_int32", 1, 6}};
-//	PRMLIB_ParamTblData_t e12 = {1, {"test_float32", 1.0, 9}};
-//
-//	PRMLIB_AppData.ParamTbl[0] = e1;
-//	PRMLIB_AppData.ParamTbl[1] = e2;
-//	PRMLIB_AppData.ParamTbl[2] = e3;
-//	PRMLIB_AppData.ParamTbl[3] = e4;
-//	PRMLIB_AppData.ParamTbl[4] = e5;
-//	PRMLIB_AppData.ParamTbl[5] = e6;
-//	PRMLIB_AppData.ParamTbl[6] = e7;
-//	PRMLIB_AppData.ParamTbl[7] = e8;
-//	PRMLIB_AppData.ParamTbl[8] = e9;
-//	PRMLIB_AppData.ParamTbl[9] = e12;
+	PRMLIB_ParamData_t param;
+	PRMLIB_ParamData_t param2;
+	PRMLIB_ParamData_t param3;
 
+	uint32 val = 899;
+	uint32 val2 = 999;
+	uint32 val3 = 1999;
+
+	strcpy(param.name, "PWN_DISARMED");
+	strcpy(param2.name, "PWN_MIN");
+	strcpy(param3.name, "PWN_MAX");
+	param.type = TYPE_UINT32;
+	param2.type = TYPE_UINT32;
+	param3.type = TYPE_UINT32;
+	PRMLIB_SetParamValue(&param, &val);
+	PRMLIB_SetParamValue(&param2, &val2);
+	PRMLIB_SetParamValue(&param3, &val3);
+
+	PRMLIB_ParamTblData_t e1 = {1, param};
+	PRMLIB_ParamTblData_t e2 = {1, param2};
+	PRMLIB_ParamTblData_t e3 = {1, param3};
+
+	PRMLIB_AppData.ParamTbl[0] = e1;
+	PRMLIB_AppData.ParamTbl[1] = e2;
+	PRMLIB_AppData.ParamTbl[2] = e3;
 
 	PRMLIB_UpdateParamCount();
-//	PRMLIB_AppData.ParamTbl[3] = {1, {"TEST_PARAM4", 4.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[4] = {1, {"TEST_PARAM5", 5.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[5] = {1, {"TEST_PARAM6", 6.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[6] = {1, {"TEST_PARAM7", 7.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[7] = {1, {"TEST_PARAM8", 8.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[8] = {1, {"TEST_PARAM9", 9.0, 9, 1, 1}};
-//	PRMLIB_AppData.ParamTbl[9] = {1, {"TEST_PARAM10", 10.0, 9, 1, 1}};
+
 }/* End PRMLIB_LibInit */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -129,7 +126,6 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 0)
 		{
-			//PRMLIB_PrintParam(param);
 			/* Update parameter message with current table index values */
 			PRMLIB_AppData.ParamTbl[i].enabled = 1;
 			memcpy(PRMLIB_AppData.ParamTbl[i].param_data.name, param.name,
@@ -304,8 +300,6 @@ int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 				/* Update parameter message with current table index values */
 				memcpy(&PRMLIB_AppData.ParamTbl[i].param_data.value, &param_data.value, PRMLIB_PARAM_VALUE_MAX_LEN);
 				PRMLIB_AppData.ParamTbl[i].param_data.type = param_data.type;
-				OS_printf("\nUpdate param:\n");
-				PRMLIB_PrintParam(PRMLIB_AppData.ParamTbl[i].param_data);
 				Status = CFE_SUCCESS;
 				break;
 			}
@@ -384,21 +378,19 @@ void PRMLIB_UpdateParamCount()
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Copy Parameter Data				                               */
+/* 				                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src)
-{
-	dest.type = src.type;
-	memcpy(&dest.value, src.value, PRMLIB_PARAM_VALUE_MAX_LEN);
-	strcpy(dest.name, src.name);
-}
-
 uint16 PRMLIB_GetParamCount()
 {
 	return PRMLIB_AppData.ParamCount;
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 {
 	uint16 idx = 0;
@@ -406,13 +398,11 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
-	OS_printf("count: %u\n", PRMLIB_AppData.ParamCount);
 	/* Iterate over table and get all params */
 	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
-			OS_printf("found enabled\n");
 			strcpy(params[idx].name, PRMLIB_AppData.ParamTbl[i].param_data.name);
 			params[idx].type = PRMLIB_AppData.ParamTbl[i].param_data.type;
 			PRMLIB_SetParamValue(&params[idx], &PRMLIB_AppData.ParamTbl[i].param_data.value);
@@ -426,6 +416,11 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 	OS_MutSemGive(PRMLIB_AppData.ParamTblMutex);
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam)
 {
 	int32 Status = -1;
@@ -452,6 +447,11 @@ int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam)
 	return Status;
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamValueById(char name[], void* InOutValue)
 {
 	int32 Status = -1;
@@ -478,6 +478,11 @@ int32 PRMLIB_GetParamValueById(char name[], void* InOutValue)
 	return Status;
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t type)
 {
 	int32 Status = -1;
@@ -515,6 +520,11 @@ int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t typ
 	return Status;
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 {
 	uint8 val_uint8 	= 0;
@@ -558,11 +568,16 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 			OS_printf("value: %f \n", val_float);
 			break;
 		default:
-			//unsupported type
+			OS_printf("Unsupported type encountered: %u\n", param.type);
 			break;
 	}
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 {
 	uint8 val_uint8 	= 0;
@@ -604,11 +619,16 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val)
 			memcpy(val, &val_float, sizeof(float));
 			break;
 		default:
-			//unsupported type
+			OS_printf("Unsupported type encountered: %u\n", param.type);
 			break;
 	}
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 {
 	uint8 val_uint8 	= 0;
@@ -619,8 +639,6 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 	int32 val_int32 	= 0;
 	float val_float		= 0.0;
 
-	uint32 test	= 0;
-	OS_printf("In set param\n");
 	switch(param->type)
 	{
 		case TYPE_UINT8:
@@ -653,11 +671,15 @@ void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val)
 			break;
 		default:
 			OS_printf("Unsupported type encountered: %u\n", param->type);
-			//unsupported type
 			break;
 	}
 }
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* 				                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 {
 	uint8 val_uint8 	= 0;
@@ -668,8 +690,6 @@ void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 	int32 val_int32 	= 0;
 	float val_float		= 0.0;
 
-	uint32 test	= 0;
-	OS_printf("In set value\n");
 	switch(type)
 	{
 		case TYPE_UINT8:
@@ -702,11 +722,9 @@ void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type)
 			break;
 		default:
 			OS_printf("Unsupported type encountered: %u\n", type);
-			//unsupported type
 			break;
 	}
 }
-
 
 /************************/
 /*  End of File Comment */
