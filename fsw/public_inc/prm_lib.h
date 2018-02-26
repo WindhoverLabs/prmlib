@@ -318,6 +318,7 @@ int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t typ
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val);
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val);
 void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type);
+void PRMLIB_InitDefaultParameters(void);
 
 /************************/
 /*  End of File Comment */

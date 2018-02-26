@@ -117,12 +117,13 @@ void PRMLIB_InitDefaultParameters(void)
 int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 {
 	int32 Status = -1;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find first empty index */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 0)
 		{
@@ -155,12 +156,13 @@ int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* InOutParam, uint16* ParamIndex, ui
 {
 	int32 Status = -1;
 	uint16 idx = 0;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find parameter */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
@@ -196,12 +198,13 @@ int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* InOutParam, uint16 ParamInd
 {
 	int32 Status = -1;
 	uint16 idx = 0;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find parameter */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
@@ -253,12 +256,13 @@ PRMLIB_ParamsEqual_Exit_Tag:
 boolean PRMLIB_ParamExists(char param_name[])
 {
 	boolean paramExists = FALSE;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find parameter */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
@@ -285,12 +289,13 @@ boolean PRMLIB_ParamExists(char param_name[])
 int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 {
 	int32 Status = -1;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find parameter */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
@@ -320,12 +325,13 @@ int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 int32 PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 {
 	int32 Status;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table to find parameter */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		/* Only check enabled parameters */
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
@@ -356,12 +362,13 @@ int32 PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 void PRMLIB_UpdateParamCount()
 {
 	uint16 count = 0;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table and count enabled entries */
-	for(int i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
+	for(i = 0; i < PRMLIB_PARAM_TBL_MAX_ENTRY; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
@@ -394,12 +401,13 @@ uint16 PRMLIB_GetParamCount()
 void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 {
 	uint16 idx = 0;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table and get all params */
-	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	for(i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
@@ -424,12 +432,13 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam)
 {
 	int32 Status = -1;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table and get all params */
-	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	for(i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
@@ -455,12 +464,13 @@ int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam)
 int32 PRMLIB_GetParamValueById(char name[], void* InOutValue)
 {
 	int32 Status = -1;
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table and get all params */
-	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	for(i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
@@ -488,12 +498,13 @@ int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t typ
 	int32 Status = -1;
 	boolean ParamExists = FALSE;
 	PRMLIB_ParamData_t param = {0};
+    int i = 0;
 
 	/* Lock the mutex */
 	OS_MutSemTake(PRMLIB_AppData.ParamTblMutex);
 
 	/* Iterate over table and get all params */
-	for(int i = 0; i < PRMLIB_AppData.ParamCount; ++i)
+	for(i = 0; i < PRMLIB_AppData.ParamCount; ++i)
 	{
 		if (PRMLIB_AppData.ParamTbl[i].enabled == 1)
 		{
