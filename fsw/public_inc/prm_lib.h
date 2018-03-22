@@ -311,9 +311,9 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount);
 void PRMLIB_CopyParamData(PRMLIB_ParamData_t dest, PRMLIB_ParamData_t src);
 
 void PRMLIB_PrintParam(PRMLIB_ParamData_t param_data);
-int32 PRMLIB_GetParamById(char name[], PRMLIB_ParamData_t* InOutParam);
-int32 PRMLIB_GetParamValueById(char name[], void* InOutValue);
-int32 PRMLIB_ParamRegister(char name[], void* inOutValue, PRMLIB_ParamType_t type);
+int32 PRMLIB_GetParamById(const char name[], PRMLIB_ParamData_t* InOutParam);
+int32 PRMLIB_GetParamValueById(const char name[], void* InOutValue);
+int32 PRMLIB_ParamRegister(const char name[], void* inOutValue, PRMLIB_ParamType_t type);
 
 void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val);
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val);
