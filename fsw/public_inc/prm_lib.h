@@ -38,6 +38,11 @@
 ** Includes
 *************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +93,7 @@ typedef struct
 {
 	char name[PRMLIB_MSG_PARAM_NAME_LEN];
     uint8 value[8];
-    uint8 type;
+    PRMLIB_ParamType_t type;
 } PRMLIB_ParamData_t;
 
 /** \brief Definition for a single config table entry */
@@ -319,6 +324,15 @@ void PRMLIB_GetParamValue(PRMLIB_ParamData_t param, void* val);
 void PRMLIB_SetParamValue(PRMLIB_ParamData_t* param, void* val);
 void PRMLIB_SetValue(void* destVal, void* srcVal, PRMLIB_ParamType_t type);
 void PRMLIB_InitDefaultParameters(void);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+#include "ParamsConsumer.hpp"
+#endif
 
 /************************/
 /*  End of File Comment */

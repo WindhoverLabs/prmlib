@@ -62,10 +62,10 @@ PRMLIB_LibInit_Exit_Tag:
 	if (Status == CFE_SUCCESS)
 	{
 		OS_printf ("PRMLIB Initialized.  Version %d.%d.%d.%d\n",
-    		PRMLIB_MAJOR_VERSION,
-			PRMLIB_MINOR_VERSION,
-			PRMLIB_REVISION,
-			PRMLIB_MISSION_REV);
+    		PRM_MAJOR_VERSION,
+			PRM_MINOR_VERSION,
+			PRM_REVISION,
+			PRM_MISSION_REV);
 	}
 
     return Status;
@@ -444,7 +444,7 @@ int32 PRMLIB_GetParamById(const char name[], PRMLIB_ParamData_t* InOutParam)
 		{
 			if (strcmp(name, PRMLIB_AppData.ParamTbl[i].param_data.name) == 0)
 			{
-				//memcpy(InOutParam, &PRMLIB_AppData.ParamTbl[i].param_data, sizeof(PRMLIB_ParamData_t));
+				InOutParam = &PRMLIB_AppData.ParamTbl[i].param_data;
 				Status = CFE_SUCCESS;
 			}
 		}
@@ -546,37 +546,28 @@ void PRMLIB_PrintParam(PRMLIB_ParamData_t param)
 	int32 val_int32 	= 0;
 	float val_float		= 0.0;
 
-	OS_printf("name: %s \n", param.name);
-	OS_printf("type: %u \n", param.type);
 	switch(param.type)
 	{
 		case TYPE_UINT8:
 			memcpy(&val_uint8, param.value, sizeof(uint8));
-			OS_printf("value: %u \n", val_uint8);
 			break;
 		case TYPE_INT8:
 			memcpy(&val_int8, param.value, sizeof(int8));
-			OS_printf("value: %i \n", val_int8);
 			break;
 		case TYPE_UINT16:
 			memcpy(&val_uint16, param.value, sizeof(uint16));
-			OS_printf("value: %u \n", val_uint16);
 			break;
 		case TYPE_INT16:
 			memcpy(&val_int16, param.value, sizeof(int16));
-			OS_printf("value: %i \n", val_int16);
 			break;
 		case TYPE_UINT32:
 			memcpy(&val_uint32, &param.value, sizeof(uint32));
-			OS_printf("value: %u \n", val_uint32);
 			break;
 		case TYPE_INT32:
 			memcpy(&val_int32, param.value, sizeof(int32));
-			OS_printf("value: %i \n", val_int32);
 			break;
 		case TYPE_REAL32:
 			memcpy(&val_float, param.value, sizeof(float));
-			OS_printf("value: %f \n", val_float);
 			break;
 		default:
 			OS_printf("Unsupported type encountered: %u\n", param.type);

@@ -36,8 +36,10 @@ add_airliner_app_def(prmlib
     NANOPB
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_lib.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/ParamsConsumer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_version.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/prm_lib.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/ParamsConsumer.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/prm_ids.h
 
     INCLUDES
@@ -48,8 +50,29 @@ add_airliner_app_def(prmlib
     PUBLIC_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/
 
-    USER_DOCS   ${CMAKE_CURRENT_SOURCE_DIR}/user_doxy.in
     DESIGN_DOCS ${CMAKE_CURRENT_SOURCE_DIR}/detail_doxy.in
+    
+    REFERENCE_CONFIG
+        ${PROJECT_SOURCE_DIR}/apps/prmlib/fsw/mission_inc
+        ${PROJECT_SOURCE_DIR}/apps/prmlib/fsw/platform_inc
+)
+
+add_airliner_app_def(prm
+    FILE PRM
+    SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_app.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_cds_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_config_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_symbols.c
+   
+    INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+
+    DESIGN_DOCS ${CMAKE_CURRENT_SOURCE_DIR}/detail_doxy.in
+    
+    REFERENCE_CONFIG
+        ${PROJECT_SOURCE_DIR}/apps/prm/fsw/mission_inc
+        ${PROJECT_SOURCE_DIR}/apps/prm/fsw/platform_inc
 )
 
 add_airliner_app_unit_test(prmlib-ut
@@ -65,8 +88,45 @@ add_airliner_app_unit_test(prmlib-ut
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_test_utils.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_testrunner.c
 
+    NO_HELGRIND
+    NO_MASSIF
+
     INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/
 		${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/
 )
+
+#add_airliner_app_unit_test(prm-ut
+#    UTASSERT 
+#    NO_HELGRIND
+#    NO_MASSIF
+#        
+#    SOURCES
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_app_test.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_cds_tbl_test.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_cmds_test.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_config_tbl_test.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_testrunner.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/prm_test_utils.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_app.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_cds_utils.c
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_config_utils.c
+#
+#    INCLUDES
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../src/
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/
+#
+#    VALGRIND_SUPPRESSION_FILE
+#        ${CMAKE_CURRENT_SOURCE_DIR}/../unit_test/valgrind.supp
+#)
+
+
+
+
+
+
+
+
+
+
 

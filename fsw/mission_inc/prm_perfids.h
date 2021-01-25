@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2019 Windhover Labs, L.L.C. All rights reserved.
+ *   Copyright (c) 2017 Windhover Labs, L.L.C. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,17 +30,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PRMLIB_APP_TEST_H
-#define PRMLIB_APP_TEST_H
+    
+#ifndef PRM_PERFIDS_H
+#define PRM_PERFIDS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void PRMLIB_App_Test_AddTestCases(void);
+#define PRM_MAIN_TASK_PERF_ID       115
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PRMLIB_APP_TEST_H */
+#endif /* PRM_PERFIDS_H */
+
+/************************/
+/*  End of File Comment */
+/************************/

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2019 Windhover Labs, L.L.C. All rights reserved.
+ *   Copyright (c) 2017 Windhover Labs, L.L.C. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,17 +30,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PRMLIB_APP_TEST_H
-#define PRMLIB_APP_TEST_H
+
+#ifndef PRM_MISSION_CFG_H
+#define PRM_MISSION_CFG_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void PRMLIB_App_Test_AddTestCases(void);
+/*
+** PRM Mission Configuration Parameter Definitions
+*/
+
+/* TODO:  Add mission configuration parameter definitions here, if necessary. */
+
+#define PRM_SB_TIMEOUT         CFE_SB_PEND_FOREVER  /* Can be a value in milliseconds */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PRMLIB_APP_TEST_H */
+#endif /* PRM_MISSION_CFG_H */
+
+/************************/
+/*  End of File Comment */
+/************************/

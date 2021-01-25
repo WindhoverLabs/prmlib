@@ -30,17 +30,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PRMLIB_APP_TEST_H
-#define PRMLIB_APP_TEST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "prm_msg.h"
 
-void PRMLIB_App_Test_AddTestCases(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* PRMLIB_APP_TEST_H */
+PRM_NoArgCmd_t           PRM_Noop;
+PRM_HkTlm_t              PRM_HkTlm;
+PRM_SetParameterCmd_t    PRM_SetParam;
+PRM_GetParameterCmd_t    PRM_GetParam;

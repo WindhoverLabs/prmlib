@@ -42,6 +42,13 @@
 #define PARAM_ID_TEST_INT32            ("TEST_INT32")
 #define PARAM_ID_TEST_FLOAT            ("TEST_FLOAT")
 
-
-
-
+#define PARAM_ID_COM_RC_IN_MODE        ("COM_RC_IN_MODE")
+#define PARAM_ID_COM_ARM_SWISBTN       ("COM_ARM_SWISBTN")
+#define PARAM_ID_COM_RC_ARM_HYST       ("COM_RC_ARM_HYST")
+#define PARAM_ID_MAV_SYS_ID            ("MAV_SYS_ID")
+#define PARAM_ID_MAV_COMP_ID           ("MAV_COMP_ID")
+#define PARAM_ID_COM_RC_LOSS_T         ("COM_RC_LOSS_T")
+#define PARAM_ID_COM_LOW_BAT_ACT       ("COM_LOW_BAT_ACT")
+#define PARAM_ID_COM_HOME_H_T          ("COM_HOME_H_T")
+#define PARAM_ID_COM_HOME_V_T          ("COM_HOME_V_T")
+#define PARAM_ID_HOME_POS_ALT_PADDING  ("HOME_POS_ALT_PADDING")
