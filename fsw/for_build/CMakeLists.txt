@@ -31,7 +31,7 @@
  #
  #############################################################################
  
-add_airliner_app_def(prmlib
+buildliner_add_app_def(prmlib
     FILE PRMLIB
     NANOPB
     SOURCES
@@ -57,7 +57,7 @@ add_airliner_app_def(prmlib
         ${PROJECT_SOURCE_DIR}/apps/prmlib/fsw/platform_inc
 )
 
-add_airliner_app_def(prm
+buildliner_add_app_def(prm
     FILE PRM
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/prm_app.c
@@ -75,7 +75,7 @@ add_airliner_app_def(prm
         ${PROJECT_SOURCE_DIR}/apps/prm/fsw/platform_inc
 )
 
-add_airliner_app_unit_test(prmlib-ut
+buildliner_add_app_unit_test(prmlib-ut
     UTASSERT
     NANOPB
     SOURCES
@@ -96,7 +96,7 @@ add_airliner_app_unit_test(prmlib-ut
 		${CMAKE_CURRENT_SOURCE_DIR}/../public_inc/
 )
 
-#add_airliner_app_unit_test(prm-ut
+#buildliner_add_app_unit_test(prm-ut
 #    UTASSERT 
 #    NO_HELGRIND
 #    NO_MASSIF
